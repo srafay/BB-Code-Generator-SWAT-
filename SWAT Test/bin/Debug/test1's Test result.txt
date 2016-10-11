@@ -1,0 +1,17 @@
+[col][b]Applicant's In-Game Name:[/b] test1
+
+    [b]Driving Skill:[/b] 3.5/5
+    [b]Aiming and Shooting:[/b] 3.62/5
+    [b]Speed of Commands:[/b] 4.25/5
+    [b]Knowledge of S.W.A.T. Rules:[/b] 5/5
+
+    [b]Overall:[/b] 3.75/5
+    [b]Notes:[/b]|[img]http://i.picresize.com/images/2016/02/04/HCG7b.png[/img][/col][list][*][b]In rules[/b], 
+[*][b]In driving[/b], 
+[*][b]In the M4 part[/b], he had 2 attempts
+[list][*][b]First try[/b]: 3-tire(s) with blown car
+[*][b]Second try[/b]: 4-tire(s) with big car damage[/list]
+[*][b]In dueling[/b], [list][*][b]First duel[/b]: I killed him with damaged hp (but not half hp)
+[*][b]Second duel[/b]: I killed him with half hp[/list]
+[*][b]In SOC[/b], he had 2 attempts for standing part and 2 attempts for the running part.
+His average speed of commands is 4.5 seconds.[/list]
