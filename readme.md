@@ -12,3 +12,8 @@ It create's a .txt file with Applicant's name and contains bb code for posting o
 
 ~~~~~~ Version 1.0 ~~~~~~
 - Added marking guides for the duel section
+
+~~~~~~ Version 1.1 ~~~~~~
+- Updated the marking guide for the duel
+- Fixed a bug from SOC section
+- Updated Driving tab, added check boxes and more things for ease of use
