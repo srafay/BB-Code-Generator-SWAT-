@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -44,10 +45,13 @@
             this.AN = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.driving_marks_overall = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.com_driving = new System.Windows.Forms.TextBox();
             this.label50 = new System.Windows.Forms.Label();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
             this.Update_driving = new System.Windows.Forms.Button();
-            this.com_driving = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.marks_driving = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -77,6 +81,9 @@
             this.label6 = new System.Windows.Forms.Label();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.label54 = new System.Windows.Forms.Label();
+            this.label53 = new System.Windows.Forms.Label();
+            this.label52 = new System.Windows.Forms.Label();
             this.label51 = new System.Windows.Forms.Label();
             this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.Update_Duel = new System.Windows.Forms.Button();
@@ -129,9 +136,7 @@
             this.label44 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.label52 = new System.Windows.Forms.Label();
-            this.label53 = new System.Windows.Forms.Label();
-            this.label54 = new System.Windows.Forms.Label();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -294,10 +299,13 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.driving_marks_overall);
+            this.tabPage3.Controls.Add(this.label19);
+            this.tabPage3.Controls.Add(this.checkedListBox1);
+            this.tabPage3.Controls.Add(this.com_driving);
             this.tabPage3.Controls.Add(this.label50);
             this.tabPage3.Controls.Add(this.pictureBox5);
             this.tabPage3.Controls.Add(this.Update_driving);
-            this.tabPage3.Controls.Add(this.com_driving);
             this.tabPage3.Controls.Add(this.label4);
             this.tabPage3.Controls.Add(this.marks_driving);
             this.tabPage3.Controls.Add(this.label5);
@@ -309,11 +317,55 @@
             this.tabPage3.Text = "Driving";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // driving_marks_overall
+            // 
+            this.driving_marks_overall.AutoSize = true;
+            this.driving_marks_overall.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.driving_marks_overall.Location = new System.Drawing.Point(175, 369);
+            this.driving_marks_overall.Name = "driving_marks_overall";
+            this.driving_marks_overall.Size = new System.Drawing.Size(0, 15);
+            this.driving_marks_overall.TabIndex = 16;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(45, 371);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(126, 13);
+            this.label19.TabIndex = 14;
+            this.label19.Text = "Overall driving marks";
+            // 
+            // checkedListBox1
+            // 
+            this.checkedListBox1.CheckOnClick = true;
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Items.AddRange(new object[] {
+            "Applicant made 3 or more shortcuts",
+            "Applicant didnt perform a stunt well enough, flipped the car or hit the wall",
+            "Applicant skipped (avoided) a stunt",
+            "Applicant was lost and you had to wait 5 times or more"});
+            this.checkedListBox1.Location = new System.Drawing.Point(41, 71);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(385, 64);
+            this.checkedListBox1.TabIndex = 13;
+            // 
+            // com_driving
+            // 
+            this.com_driving.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.HistoryList;
+            this.com_driving.Location = new System.Drawing.Point(102, 164);
+            this.com_driving.Multiline = true;
+            this.com_driving.Name = "com_driving";
+            this.com_driving.Size = new System.Drawing.Size(219, 121);
+            this.com_driving.TabIndex = 9;
+            this.com_driving.Text = "\r\n\r\nDescribe till where the applicant completed the route\r\n\r\nIf you gave him 2nd " +
+    "attempt, then do mention and also the reason. Else its not needed.";
+            // 
             // label50
             // 
             this.label50.AutoSize = true;
             this.label50.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label50.Location = new System.Drawing.Point(125, 25);
+            this.label50.Location = new System.Drawing.Point(235, 37);
             this.label50.Name = "label50";
             this.label50.Size = new System.Drawing.Size(17, 15);
             this.label50.TabIndex = 12;
@@ -322,7 +374,7 @@
             // pictureBox5
             // 
             this.pictureBox5.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox5.Image")));
-            this.pictureBox5.Location = new System.Drawing.Point(334, 202);
+            this.pictureBox5.Location = new System.Drawing.Point(340, 209);
             this.pictureBox5.Name = "pictureBox5";
             this.pictureBox5.Size = new System.Drawing.Size(287, 237);
             this.pictureBox5.TabIndex = 11;
@@ -330,7 +382,7 @@
             // 
             // Update_driving
             // 
-            this.Update_driving.Location = new System.Drawing.Point(157, 209);
+            this.Update_driving.Location = new System.Drawing.Point(179, 302);
             this.Update_driving.Name = "Update_driving";
             this.Update_driving.Size = new System.Drawing.Size(64, 35);
             this.Update_driving.TabIndex = 10;
@@ -338,18 +390,10 @@
             this.Update_driving.UseVisualStyleBackColor = true;
             this.Update_driving.Click += new System.EventHandler(this.Update_driving_Click);
             // 
-            // com_driving
-            // 
-            this.com_driving.Location = new System.Drawing.Point(92, 59);
-            this.com_driving.Multiline = true;
-            this.com_driving.Name = "com_driving";
-            this.com_driving.Size = new System.Drawing.Size(219, 121);
-            this.com_driving.TabIndex = 9;
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(23, 61);
+            this.label4.Location = new System.Drawing.Point(34, 209);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(62, 13);
             this.label4.TabIndex = 8;
@@ -357,7 +401,7 @@
             // 
             // marks_driving
             // 
-            this.marks_driving.Location = new System.Drawing.Point(92, 24);
+            this.marks_driving.Location = new System.Drawing.Point(201, 36);
             this.marks_driving.Name = "marks_driving";
             this.marks_driving.Size = new System.Drawing.Size(33, 20);
             this.marks_driving.TabIndex = 7;
@@ -365,11 +409,11 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(8, 26);
+            this.label5.Location = new System.Drawing.Point(20, 39);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(77, 13);
+            this.label5.Size = new System.Drawing.Size(175, 13);
             this.label5.TabIndex = 6;
-            this.label5.Text = "Driving marks :";
+            this.label5.Text = "Driving marks (without deductions) :";
             // 
             // tabPage4
             // 
@@ -634,16 +678,44 @@
             this.tabPage5.Text = "Duel";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label54.Location = new System.Drawing.Point(363, 116);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(17, 15);
+            this.label54.TabIndex = 48;
+            this.label54.Text = "/5";
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label53.Location = new System.Drawing.Point(363, 46);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(17, 15);
+            this.label53.TabIndex = 47;
+            this.label53.Text = "/5";
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label52.Location = new System.Drawing.Point(28, 52);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(108, 16);
+            this.label52.TabIndex = 46;
+            this.label52.Text = "Marking Guide";
+            // 
             // label51
             // 
             this.label51.AutoSize = true;
             this.label51.Location = new System.Drawing.Point(6, 91);
             this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(226, 169);
+            this.label51.Size = new System.Drawing.Size(226, 195);
             this.label51.TabIndex = 45;
-            this.label51.Text = "Full armor = 0\r\n\r\nArmor has some damage but not half armor = 1\r\n\r\nHalf armor = 2\r" +
-    "\n\r\nNo armor, full health = 2.5\r\n\r\nHealth is damaged but not half health = 3\r\n\r\nH" +
-    "alf health = 4\r\n\r\nYou\'re dead = 5";
+            this.label51.Text = resources.GetString("label51.Text");
             // 
             // pictureBox7
             // 
@@ -1157,35 +1229,10 @@
             this.pictureBox3.TabStop = false;
             this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
             // 
-            // label52
+            // contextMenuStrip1
             // 
-            this.label52.AutoSize = true;
-            this.label52.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label52.Location = new System.Drawing.Point(28, 52);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(108, 16);
-            this.label52.TabIndex = 46;
-            this.label52.Text = "Marking Guide";
-            // 
-            // label53
-            // 
-            this.label53.AutoSize = true;
-            this.label53.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label53.Location = new System.Drawing.Point(363, 46);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(17, 15);
-            this.label53.TabIndex = 47;
-            this.label53.Text = "/5";
-            // 
-            // label54
-            // 
-            this.label54.AutoSize = true;
-            this.label54.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label54.Location = new System.Drawing.Point(363, 116);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(17, 15);
-            this.label54.TabIndex = 48;
-            this.label54.Text = "/5";
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
             // Form1
             // 
@@ -1327,6 +1374,10 @@
         private System.Windows.Forms.Label label54;
         private System.Windows.Forms.Label label53;
         private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label driving_marks_overall;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
 
 
 

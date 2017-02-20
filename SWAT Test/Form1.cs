@@ -33,7 +33,7 @@ namespace SWAT_Test
         public Form1()
         {
             InitializeComponent();
-            this.Text = "SWAT Applicant Testing Software";
+            this.Text = "SWAT Applicant Testing Software v1.1";
             
         }
 
@@ -48,10 +48,57 @@ namespace SWAT_Test
 
         private void Update_driving_Click(object sender, EventArgs e)
         {
+            int number_of_deductions = checkedListBox1.CheckedIndices.Count;
             M_Driving = Convert.ToDouble(marks_driving.Text);
+
+
+            /* Deduct marks only if driving marks are > 2.5/5 */
+            for (int i = 0; i < number_of_deductions; ++i)
+            {
+                if (M_Driving > 2.5)
+                    M_Driving -= 0.25;
+                else
+                    break;
+            }
+            /* ////////////////////////////////////////////// */
+
+            driving_marks_overall.Text = Convert.ToString(M_Driving) + " / 5";
             drivingcomment = com_driving.Text;
+
+            if (number_of_deductions != 0)
+            {
+                drivingcomment += " [list]The applicants marks were deducted due to the following reasons : ";
+                drivingcomment += Environment.NewLine;
+
+                if (checkedListBox1.GetItemChecked(0))
+                {
+                    drivingcomment += "[*]Applicant made 3 or more shortcuts";
+                    drivingcomment += Environment.NewLine;
+                }
+
+                if (checkedListBox1.GetItemChecked(1))
+                {
+                    drivingcomment += "[*]Applicant didn't perform stunts well enough";
+                    drivingcomment += Environment.NewLine;
+                }
+
+                if (checkedListBox1.GetItemChecked(2))
+                {
+                    drivingcomment += "[*]Applicant skipped a stunt";
+                    drivingcomment += Environment.NewLine;
+                }
+
+                if (checkedListBox1.GetItemChecked(3))
+                {
+                    drivingcomment += "[*]Applicant lost me and i had to wait for him 5 times or more";
+                }
+
+                drivingcomment += "[/list]";
+            }
+
             MessageBox.Show("Driving marks are updated now!", "Form Locked!");
             //Update_driving.Enabled = false;
+            
         }
 
         private void Update_m4_Click(object sender, EventArgs e)
@@ -254,8 +301,10 @@ namespace SWAT_Test
                 return "I killed him with no armour (full hp)";
             if (marks - 3.9 < 0)
                 return "I killed him with damaged hp (but not half hp)";
-            if (marks - 4.9 < 0)
+            if (marks - 4.4 < 0)
                 return "I killed him with half hp";
+            if (marks - 4.9 < 0)
+                return "I killed him with less than half hp";
             if (marks == 5)
                 return "He killed me";
             return "";
@@ -281,14 +330,15 @@ namespace SWAT_Test
             double marks = 0;
             double soc = Convert.ToDouble(sec);
 
-                if (soc >= 9)   // checking if failed in soc
-                    marks = 0;
+            if (soc >= 8)   // checking if failed in soc
+            {
+                marks = 0;
+                return marks;
+            }
 
             double temp = soc - (int)soc; // stores fractional part if any
             soc = (int)soc;
 
-                if (soc == 8)
-                    marks = 2.5;
                 if (soc == 7)
                     marks = 3;
                 if (soc == 6)
@@ -298,7 +348,10 @@ namespace SWAT_Test
                 if (soc == 4)
                     marks = 4.5;
                 if (soc <= 3)
+                {
                     marks = 5;
+                    return marks;
+                }
             
             /* now calculating for fractional part */
 

@@ -15,4 +15,3 @@ D:\Desktop\SWAT Test\SWAT Test\obj\Debug\SWAT_Test.Properties.Resources.resource
 D:\Desktop\SWAT Test\SWAT Test\obj\Debug\SWAT Test.csproj.GenerateResource.Cache
 D:\Desktop\SWAT Test\SWAT Test\obj\Debug\SWAT Test.exe
 D:\Desktop\SWAT Test\SWAT Test\obj\Debug\SWAT Test.pdb
-D:\Desktop\SWAT Test\SWAT Test\obj\Debug\SWAT Test.csprojResolveAssemblyReference.cache
