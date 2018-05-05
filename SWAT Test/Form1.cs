@@ -13,35 +13,51 @@ namespace SWAT_Test
 {
     public partial class Form1 : Form
     {
-        string applicantname = "";
-        string Final="";
-        double M_Rules=0;
-        double m4marks = 0;
-        string m4comment;
-        double duelmarks = 0;
-        string duelcomment;
-        double M_Aim=0;
-        double M_SOC=0;
-        double SOC_sec;
-        double M_Driving=0;
-        string drivingcomment;
-        string rulescomment;
-        double M_Final;
-        int m4numberofcounts = 0;
-        int socstandingattempts = 0;
-        int socrunningattempts = 0;
+        //Make a structure for an applicant
+        public class ApplicantData
+        {
+            public string name;
+            public string output;
+            public enum Categories
+            {
+                RULES = 0,
+                DRIVING,
+                M4,
+                DUEL,
+                SOC,
+                MAX_CATEGORIES
+            }
+            public double[] results = new double[(int)Categories.MAX_CATEGORIES];
+            public string[] comments = new string[(int)Categories.MAX_CATEGORIES];
+
+            //"overall" grades are rules, aim, soc, driving, final
+            //aim is the average of m4 and duel results
+            //each category has its optional comment
+
+            public enum Attempts
+            {
+                STANDING = 0,
+                RUNNING,
+                MAX_ATTEMPTS
+            }
+            public int[] socAttempts = new int[(int)Attempts.MAX_ATTEMPTS];
+            public int m4attempts = 0;
+            public double socTime = 0;
+        }
+
+        ApplicantData applicant = new ApplicantData();
+
         public Form1()
         {
             InitializeComponent();
             this.Text = "SWAT Applicant Testing Software v1.1";
-            
         }
 
         private void Update_rules_Click(object sender, EventArgs e)
         {
-            applicantname = AN.Text;
-            M_Rules = Convert.ToDouble(marks_rules.Text);
-            rulescomment = com_rules.Text;
+            applicant.name = AN.Text;
+            applicant.results[(int)ApplicantData.Categories.RULES] = Convert.ToDouble(marks_rules.Text);
+            applicant.comments[(int)ApplicantData.Categories.RULES] = com_rules.Text;
             MessageBox.Show("SWAT Rules Marks are updated now!", "Form Locked!");
             //Update_rules.Enabled = false;
         }
@@ -49,418 +65,300 @@ namespace SWAT_Test
         private void Update_driving_Click(object sender, EventArgs e)
         {
             int number_of_deductions = checkedListBox1.CheckedIndices.Count;
-            M_Driving = Convert.ToDouble(marks_driving.Text);
+            applicant.results[(int)ApplicantData.Categories.DRIVING] = Convert.ToDouble(marks_driving.Text);
 
 
             /* Deduct marks only if driving marks are > 2.5/5 */
-            for (int i = 0; i < number_of_deductions; ++i)
+            if (applicant.results[(int)ApplicantData.Categories.DRIVING] > 2.5)
             {
-                if (M_Driving > 2.5)
-                    M_Driving -= 0.25;
-                else
-                    break;
+                for (int i = 0; i < number_of_deductions; ++i)
+                    applicant.results[(int)ApplicantData.Categories.DRIVING] -= 0.25;
             }
+
             /* ////////////////////////////////////////////// */
 
-            driving_marks_overall.Text = Convert.ToString(M_Driving) + " / 5";
-            drivingcomment = com_driving.Text;
+            driving_marks_overall.Text = Convert.ToString(applicant.results[(int)ApplicantData.Categories.DRIVING]) + " / 5";
+            applicant.comments[(int)ApplicantData.Categories.DRIVING] = com_driving.Text;
 
             if (number_of_deductions != 0)
             {
-                drivingcomment += " [list]The applicants marks were deducted due to the following reasons : ";
-                drivingcomment += Environment.NewLine;
+                applicant.comments[(int)ApplicantData.Categories.DRIVING] += " [list]The applicants marks were deducted due to the following reasons : " + Environment.NewLine;
 
-                if (checkedListBox1.GetItemChecked(0))
+                //go through each possible deduction, and adjust driving comment accordingly
+                //checkedListBox1 is responsible for holding all checkboxes related to driving - see which ones are toggled there
+                string temp = "";
+
+                CheckedListBox.CheckedItemCollection _checked = checkedListBox1.CheckedItems;
+                foreach (var item in _checked)
                 {
-                    drivingcomment += "[*]Applicant made 3 or more shortcuts";
-                    drivingcomment += Environment.NewLine;
+                    //comment string and label text are exactly the same, except with a [*]
+                    temp += "[*]" + item.ToString();
                 }
 
-                if (checkedListBox1.GetItemChecked(1))
-                {
-                    drivingcomment += "[*]Applicant didn't perform stunts well enough";
-                    drivingcomment += Environment.NewLine;
-                }
-
-                if (checkedListBox1.GetItemChecked(2))
-                {
-                    drivingcomment += "[*]Applicant skipped a stunt";
-                    drivingcomment += Environment.NewLine;
-                }
-
-                if (checkedListBox1.GetItemChecked(3))
-                {
-                    drivingcomment += "[*]Applicant lost me and i had to wait for him 5 times or more";
-                }
-
-                drivingcomment += "[/list]";
+                applicant.comments[(int)ApplicantData.Categories.DRIVING] += temp + "[/list]";
             }
-
             MessageBox.Show("Driving marks are updated now!", "Form Locked!");
             //Update_driving.Enabled = false;
-            
+
         }
+
 
         private void Update_m4_Click(object sender, EventArgs e)
         {
-            m4comment = "";
-            int count=0;
-            double damage=0 ;
-            string temp="";
+            applicant.comments[(int)ApplicantData.Categories.M4] = "";
+            int count = 0;
+            double damage = 0;
+            string temp = "";
+
             if (tire1.Text.Length != 0)
             {
-                if (Convert.ToDouble(carhp1.Text) >= 900)
-                { damage = 0; temp = "low car damage"; goto one; }
-                if (Convert.ToDouble(carhp1.Text) >= 750 )
-                { damage = -0.25; temp = "medium car damage"; goto one; }
-                if (Convert.ToDouble(carhp1.Text) >= 500)
-                { damage = -0.5; temp = "big car damage"; goto one; }
-                if (Convert.ToDouble(carhp1.Text) >= 250)
-                { damage = -0.75; temp = "heavy car damage"; goto one; }
-                if (Convert.ToDouble(carhp1.Text) < 250)
-                { damage = -1; temp = "blown car"; goto one; }
-            one:
-                m4comment = "[list][*][b]First try[/b]: " + tire1.Text + "-tire(s) with " + temp;
-                m4marks = Convert.ToInt32(tire1.Text)+1+damage;
-                count++;
+                //adjust temp string according to damage
+                evaluateCarDamage(ref temp);
+                applicant.comments[(int)ApplicantData.Categories.M4] = "[list][*][b]First try[/b]: " + tire1.Text + "-tire(s) with " + temp;
+                applicant.results[(int)ApplicantData.Categories.M4] = Convert.ToInt32(tire1.Text) + 1 + damage;
+                ++count;
             }
 
             if (tire2.Text.Length != 0)
             {
-                if (Convert.ToDouble(carhp2.Text) == 1000)
-                { damage = 0; temp = "no car damage"; goto two; }
-                if (Convert.ToDouble(carhp2.Text) >= 750)
-                { damage = -0.25; temp = "medium car damage"; goto two; }
-                if (Convert.ToDouble(carhp2.Text) >= 500)
-                { damage = -0.5; temp = "big car damage"; goto two; }
-                if (Convert.ToDouble(carhp2.Text) >= 250)
-                { damage = -0.75; temp = "heavy car damage"; goto two; }
-                if (Convert.ToDouble(carhp2.Text) < 250)
-                { damage = -1; temp = "blown car"; goto two; }
-            two:
-                m4comment += Environment.NewLine;
-            m4comment = m4comment + "[*][b]Second try[/b]: " + tire2.Text + "-tire(s) with " + temp;
-                m4marks += Convert.ToInt32(tire2.Text) + 1 + damage;
-                count++;
+                //adjust temp string according to damage
+                evaluateCarDamage(ref temp);
+                applicant.comments[(int)ApplicantData.Categories.M4] += Environment.NewLine + "[*][b]Second try[/b]: " + tire2.Text + "-tire(s) with " + temp;
+                applicant.results[(int)ApplicantData.Categories.M4] += Convert.ToInt32(tire2.Text) + 1 + damage;
+                ++count;
             }
+
             if (tire3.Text.Length != 0)
             {
-                if (Convert.ToDouble(carhp3.Text) == 1000)
-                { damage = 0; temp = "no car damage"; goto three; }
-                if (Convert.ToDouble(carhp3.Text) >= 750)
-                { damage = -0.25; temp = "medium car damage"; goto three; }
-                if (Convert.ToDouble(carhp3.Text) >= 500)
-                { damage = -0.5; temp = "big car damage"; goto three; }
-                if (Convert.ToDouble(carhp3.Text) >= 250)
-                { damage = -0.75; temp = "heavy car damage"; goto three; } 
-                if (Convert.ToDouble(carhp3.Text) < 250)
-                { damage = -1; temp = "blown car"; goto three; }
-            three:
-                m4comment += Environment.NewLine;
-            m4comment = m4comment + "[*][b]Third try[/b]: " + tire3.Text + "-tire(s) with " + temp;
-                m4marks += Convert.ToInt32(tire3.Text) + 1 + damage;
-                count++;
+                //adjust temp string according to damage
+                evaluateCarDamage(ref temp);
+                applicant.comments[(int)ApplicantData.Categories.M4] += Environment.NewLine + "[*][b]Third try[/b]: " + tire3.Text + "-tire(s) with " + temp;
+                applicant.results[(int)ApplicantData.Categories.M4] += Convert.ToInt32(tire3.Text) + 1 + damage;
+                ++count;
             }
+
             if (tire4.Text.Length != 0)
             {
-                if (Convert.ToDouble(carhp4.Text) == 1000)
-                { damage = 0; temp = "no car damage"; goto four; }
-                if (Convert.ToDouble(carhp4.Text) >= 750)
-                { damage = -0.25; temp = "medium car damage"; goto four; }
-                if (Convert.ToDouble(carhp4.Text) >= 500)
-                { damage = -0.5; temp = "big car damage"; goto four; }
-                if (Convert.ToDouble(carhp4.Text) >= 250)
-                { damage = -0.75; temp = "heavy car damage"; goto four; } 
-                if (Convert.ToDouble(carhp4.Text) < 250)
-                { damage = -1; temp = "blown car"; goto four; }
-            four:
-                m4comment += Environment.NewLine;
-            m4comment = m4comment + "[*][b]Fourth try[/b]: " + tire4.Text + "-tire(s) with " + temp;
-                m4marks += Convert.ToInt32(tire4.Text) + 1 + damage;
-                count++;
+                //adjust temp string according to damage
+                evaluateCarDamage(ref temp);
+                applicant.comments[(int)ApplicantData.Categories.M4] += Environment.NewLine + "[*][b]Fourth try[/b]: " + tire4.Text + "-tire(s) with " + temp;
+                applicant.results[(int)ApplicantData.Categories.M4] += Convert.ToInt32(tire4.Text) + 1 + damage;
+                ++count;
             }
-            m4comment = m4comment + "[/list]";
-            m4marks = m4marks / count;
-            overall_m4.Text = Convert.ToString(m4marks);
+
+            applicant.comments[(int)ApplicantData.Categories.M4] += "[/list]";
+            applicant.results[(int)ApplicantData.Categories.M4] /= count;
+            overall_m4.Text = Convert.ToString(applicant.results[(int)ApplicantData.Categories.M4]);
             MessageBox.Show("M4 shooting marks are updated now!", "Form Locked!");
             //Update_m4.Enabled = false;
-            m4numberofcounts = count;
+            applicant.m4attempts = count;
         }
 
         private void Update_Duel_Click(object sender, EventArgs e)
         {
-            duelcomment = "";
-            duelmarks = 0;
-            int count=0;
+            applicant.comments[(int)ApplicantData.Categories.DUEL] = "";
+            applicant.results[(int)ApplicantData.Categories.DUEL] = 0;
+            int count = 0;
             string temp = "";
+
             if (dmarks1.Text.Length != 0)
             {
-                duelmarks += Convert.ToDouble(dmarks1.Text);
-                count++;
-                temp = calculatehp(Convert.ToDouble(dmarks1.Text));
-                duelcomment = "[*][b]In dueling[/b], ";
-                duelcomment += "[list][*][b]First duel[/b]: " + temp;
-            }
-            if (dmarks2.Text.Length != 0)
-            {
-                duelmarks += Convert.ToDouble(dmarks2.Text);
-                count++;
-                temp = calculatehp(Convert.ToDouble(dmarks2.Text));
-                duelcomment += Environment.NewLine;
-                duelcomment = duelcomment + "[*][b]Second duel[/b]: " + temp; // plus here
+                applicant.results[(int)ApplicantData.Categories.DUEL] += Convert.ToDouble(dmarks1.Text);
+                ++count;
+                temp = evaluateHP(Convert.ToDouble(dmarks1.Text));
+                applicant.comments[(int)ApplicantData.Categories.DUEL] = "[*][b]In dueling[/b], [list][*][b]First duel[/ b]: " + temp;
             }
 
-            duelcomment += "[/list]";
-            duelmarks = duelmarks / count;
-            overall_duel.Text = Convert.ToString(duelmarks);
-            M_Aim = Math.Round ( (duelmarks + m4marks) / 2 , 3 );
-            M_Aim = roundoff_custom(M_Aim);
+            if (dmarks2.Text.Length != 0)
+            {
+                applicant.results[(int)ApplicantData.Categories.DUEL] += Convert.ToDouble(dmarks2.Text);
+                ++count;
+                temp = evaluateHP(Convert.ToDouble(dmarks2.Text));
+                applicant.comments[(int)ApplicantData.Categories.DUEL] += Environment.NewLine + "[*][b]Second duel[/ b]: " + temp;
+            }
+
+            applicant.comments[(int)ApplicantData.Categories.DUEL] += "[/list]";
+            applicant.results[(int)ApplicantData.Categories.DUEL] /= count;
+            overall_duel.Text = Convert.ToString(applicant.results[(int)ApplicantData.Categories.DUEL]);
+            //Do these later on - in a printing message
+            /*
+             * M_Aim = Math.Round((duelmarks + m4marks) / 2, 3);
+                M_Aim = roundoff_custom(M_Aim);
+             * */
             MessageBox.Show("Dueling marks are updated now!", "Form Locked!");
-            //Update_Duel.Enabled = false;
         }
 
         private void Update_SOC_Click(object sender, EventArgs e)
         {
-            double ssec=0;
-            double rsec=0;
+            //first index is standing, second index is running
+            double[] seconds = { 0, 0 };
             int count = 0;
-            if (soc_s1.Text.Length != 0)
+
+            TextBox[] standing = { soc_s1, soc_s2, soc_s3, soc_s4 };
+
+            for (int i = 0; i < standing.Length; ++i)
             {
-                ssec += Convert.ToDouble(soc_s1.Text);
-                count++;
-            }
-            if (soc_s2.Text.Length != 0)
-            {
-                ssec += Convert.ToDouble(soc_s2.Text);
-                count++;
-            }
-            if (soc_s3.Text.Length != 0)
-            {
-                ssec += Convert.ToDouble(soc_s3.Text);
-                count++;
-            }
-            if (soc_s4.Text.Length != 0)
-            {
-                ssec += Convert.ToDouble(soc_s4.Text);
-                count++;
-            }
-            ssec = ssec / count;
-            socstandingattempts = count;
-            count = 0;
-            if (soc_r1.Text.Length != 0)
-            {
-                rsec += Convert.ToDouble(soc_r1.Text);
-                count++;
-            }
-            if (soc_r2.Text.Length != 0)
-            {
-                rsec += Convert.ToDouble(soc_r2.Text);
-                count++;
+                if (standing[i].Text.Length != 0)
+                {
+                    seconds[0] += Convert.ToDouble(standing[i].Text);
+                    ++count;
+                }
             }
 
-            if (soc_r3.Text.Length != 0)
+            seconds[0] /= count;
+            applicant.socAttempts[(int)ApplicantData.Attempts.STANDING] = count;
+            count = 0;
+
+            TextBox[] running = { soc_r1, soc_r2, soc_r3, soc_r4 };
+
+            for (int i = 0; i < running.Length; ++i)
             {
-                rsec += Convert.ToDouble(soc_r3.Text);
-                count++;
+                if (running[i].Text.Length != 0)
+                {
+                    seconds[1] += Convert.ToDouble(running[i].Text);
+                    ++count;
+                }
             }
-            if (soc_r4.Text.Length != 0)
-            {
-                rsec += Convert.ToDouble(soc_r4.Text);
-                count++;
-            }
-            socrunningattempts = count;
-            if (count != 0)
-            {
-                rsec = rsec / count;
-            }
-            else
-            {
-                rsec = ssec;
-            }
-       
-            SOC_sec = (rsec + ssec) / 2;
-            SOC_sec = roundoff_soc(SOC_sec);
-            
-            //M_SOC = calculatesoc ( Convert.ToString((rsec + ssec) / 2) );
-            M_SOC = calculatesocNEW(Convert.ToString(SOC_sec));
-            overall_soc.Text = Convert.ToString(M_SOC);
-            overall_sec.Text = Convert.ToString(SOC_sec);
+            applicant.socAttempts[(int)ApplicantData.Attempts.RUNNING] = count;
+            seconds[1] = (count != 0) ? seconds[1] / count : seconds[0];
+
+            //calculating total time
+            applicant.socTime = (seconds[0] + seconds[1]) / 2;
+            roundoff_soc(ref applicant.socTime);
+            //calculating soc score
+            applicant.results[(int)ApplicantData.Categories.SOC] = calculatesocNEW(applicant.socTime);
+
+            overall_soc.Text = Convert.ToString(applicant.results[(int)ApplicantData.Categories.SOC]);
+            overall_sec.Text = Convert.ToString(applicant.socTime);
+
             MessageBox.Show("Speed of command's marks are updated now!", "Form Locked!");
             //Update_SOC.Enabled = false;
         }
 
-        string calculatehp(double marks)
+        private void button1_Click_1(object sender, EventArgs e)
         {
-            if (marks - 0.9 < 0)
-                return "I killed him with almost full armour";
-            if (marks - 1.9 < 0)
-                return "I killed him with damaged armour (but not half)";
-            if (marks - 2.4 < 0)
-                return "I killed him with Half armour";
-            if (marks - 2.9 < 0)
-                return "I killed him with no armour (full hp)";
-            if (marks - 3.9 < 0)
-                return "I killed him with damaged hp (but not half hp)";
-            if (marks - 4.4 < 0)
-                return "I killed him with half hp";
-            if (marks - 4.9 < 0)
-                return "I killed him with less than half hp";
-            if (marks == 5)
-                return "He killed me";
-            return "";
+            //This function could still use some cleanup on the whole string appending (memory intensive since it creates a new string per each appending operation) 
+            double aimScore = Math.Round((applicant.results[(int)ApplicantData.Categories.DUEL] + applicant.results[(int)ApplicantData.Categories.M4]) / 2, 3);
+            roundoff_custom(ref aimScore);
+            double overallScore = Math.Round((applicant.results[(int)ApplicantData.Categories.DRIVING] + applicant.results[(int)ApplicantData.Categories.SOC] + aimScore) / 3, 2);
+
+            string Final = "";
+
+            Final = "[col][b]Applicant's In-Game Name:[/b] ";
+            Final += applicant.name + Environment.NewLine + Environment.NewLine;
+            Final += "    [b]Driving Skill:[/b] ";
+            Final += applicant.results[(int)ApplicantData.Categories.DRIVING] + "/5" + Environment.NewLine;
+            Final += "    [b]Aiming and Shooting:[/b] ";
+            Final += aimScore + "/5" + Environment.NewLine;
+            Final += "    [b]Speed of Commands:[/b] ";
+            Final += applicant.results[(int)ApplicantData.Categories.SOC] + "/5" + Environment.NewLine;
+            Final += "    [b]Knowledge of S.W.A.T. Rules:[/b] ";
+            Final += applicant.results[(int)ApplicantData.Categories.RULES] + "/5" + Environment.NewLine + Environment.NewLine;
+            Final += "    [b]Overall:[/b] " + overallScore + "/5" + Environment.NewLine;
+            Final += "    [b]Notes:[/b]|[img]http://i.picresize.com/images/2016/02/04/HCG7b.png[/img][/col]";
+            Final += "[list][*][b]In rules[/b], " + applicant.comments[(int)ApplicantData.Categories.RULES] + Environment.NewLine;
+            if (applicant.results[(int)ApplicantData.Categories.RULES] >= 4)
+            {
+                Final += "[*][b]In driving[/b], " + applicant.comments[(int)ApplicantData.Categories.RULES] + Environment.NewLine;
+                Final += "[*][b]In the M4 part[/b], he had " + applicant.m4attempts + " attempts" + Environment.NewLine;
+                Final += applicant.comments[(int)ApplicantData.Categories.RULES] + Environment.NewLine;
+                Final += applicant.comments[(int)ApplicantData.Categories.DUEL] + Environment.NewLine;
+                Final += "[*][b]In SOC[/b], he had " + applicant.socAttempts[(int)ApplicantData.Attempts.STANDING] + " attempts for standing part and ";
+                Final += applicant.socAttempts[(int)ApplicantData.Attempts.RUNNING] + " attempts for the running part.";
+                Final += Environment.NewLine + "His average speed of commands is ";
+                Final += applicant.socTime + " seconds.";
+            }
+            Final += "[/list]";
+            applicant.output = Final;
+            File.WriteAllText(applicant.name + "'s Test result.txt", Final);
+            MessageBox.Show("BB Code is ready, copy it from txt file", "SWAT Test result");
         }
 
-        double calculatesoc(string sec)
+        private void evaluateCarDamage(ref string str)
         {
-
-            double marks = 5;
-            double soc =  Convert.ToDouble (sec);
-            for (double i = 3; i < 14; i = Math.Round (i + 0.1 , 2))
+            switch (Convert.ToDouble(carhp1.Text))
             {
-                if (soc <= i)
-                    return marks;
-                marks =  Math.Round (marks - 0.05 , 2);
+                //C# 7 feature - ranged switch statements (would've used simple if-elseif-else branch if not available)
+                case double d when (d >= 900): str = "low car damage"; break;
+                case double d when (d < 900 && d >= 750): str = "medium car damage"; break;
+                case double d when (d < 750 && d >= 500): str = "big car damage"; break;
+                case double d when (d < 500 && d >= 250): str = "heavy car damage"; break;
+                //default should really be left to extraneous cases (such as invalid input), but bleh don't have time for that
+                default: str = "blown car"; break;
             }
-            return marks;
         }
 
-        double calculatesocNEW(string sec)
+        private string evaluateHP(double marks)
         {
-
-            double marks = 0;
-            double soc = Convert.ToDouble(sec);
-
-            if (soc >= 8)   // checking if failed in soc
-            {
-                marks = 0;
-                return marks;
-            }
-
-            double temp = soc - (int)soc; // stores fractional part if any
-            soc = (int)soc;
-
-                if (soc == 7)
-                    marks = 3;
-                if (soc == 6)
-                    marks = 3.5;
-                if (soc == 5)
-                    marks = 4;
-                if (soc == 4)
-                    marks = 4.5;
-                if (soc <= 3)
-                {
-                    marks = 5;
-                    return marks;
-                }
+            double[] intervals = { 0.9, 1.9, 2.4, 2.9, 3.9, 4.4, 4.9, 5 };
+            string[] messages = { "I killed him with almost full armour", "I killed him with damaged armour(but not half)", "I killed him with Half armour", "I killed him with no armour (full hp)",
+                                    "I killed him with damaged hp (but not half hp)", "I killed him with half hp", "I killed him with less than half hp", "He killed me"};
             
-            /* now calculating for fractional part */
-
-                if (temp == 0.5)
-                    marks -= 0.25;
-                return marks;
-
-          
-           
+            //messages correspond to their respective marks - intervals[i] being smaller than 0 -> use that to our advantage
+            for(int i=0; i < intervals.Length; ++i)
+            {
+                if (marks - intervals[i] < 0)
+                    return messages[i];
+            }
+            return null;
         }
 
-        double roundoff_custom(double x)
-        {
-            double temp;
-            temp = x - (int)(x);
-            if (temp >= 0.875)
-            {
-                temp = 1;
-                goto label;
-            }
-            if (temp >= 0.625)
-            {
-                temp = 0.75;
-                goto label;
-            }
-            if (temp >= 0.375)
-            {
-                temp = 0.5;
-                goto label;
-            }
-            if (temp >= 0.125)
-            {
-                temp = .25;
-                goto label;
-            }
-            if (temp < 0.125)
-            {
-                temp = 0;
-                goto label;
-            }
-
-        label:  // label for goto
-
-            x = (int)x + temp;
-        return x;
-        }
-
-        double roundoff_soc(double x)
+        private void roundoff_custom(ref double x)
         {
             double temp;
             temp = x - (int)x;
-            if (temp <= 0.25)
+            switch (temp)
             {
-                temp = 0;
-                goto label;
+                //C# 7 feature - ranged switch statements (would've used simple if-elseif-else branch if not available)
+                case double d when (d >= 0.875): temp = 1; break;
+                case double d when (d < 0.875 && d >= 0.625): temp = 0.75; break;
+                case double d when (d < 0.625 && d >= 0.375): temp = 0.5; break;
+                case double d when (d < 0.375 && d >= 0.125): temp = 0.25; break;
+                default: temp = 0; break;
             }
-            if (temp <= 0.5)
+
+            x = (int)x + temp;
+        }
+       
+
+        private void roundoff_soc(ref double time)
+        {
+            double temp = time - (int)time;
+            switch (temp)
             {
-                temp = 0.5;
-                goto label;
+                //C# 7 feature - ranged switch statements (would've used simple if-elseif-else branch if not available)
+                case double d when (d <= 0.25): temp = 0; break;
+                case double d when (d > 0.25 && d <= 0.5): temp = 0.5; break;
+                case double d when (d > 0.5 && d <= 0.75): temp = 0.5; break;
+                case double d when (d > 0.75 && d <= 1): temp = 1; break;
             }
-            if (temp <= 0.75)
-            {
-                temp = 0.5;
-                goto label;
-            }
-            if (temp <= 1)
-            {
-                temp = 1;
-                goto label;
-            }
-        label:  // label for goto
-        x = (int)x + temp;
-        return x;
+            time = (int)time + time;
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        double calculatesocNEW(double seconds)
         {
-            M_Final = Math.Round ( (M_Driving + M_Aim + M_SOC) / 3 , 2); // M_Aim = m4marks duelmarks /2
-            //M_Final = roundoff_custom(M_Final); // no need to fancy round off overall
 
-            Final = "[col][b]Applicant's In-Game Name:[/b] ";
-            Final = Final + applicantname + Environment.NewLine + Environment.NewLine;
-            Final += "    [b]Driving Skill:[/b] ";
-            Final = Final + M_Driving + "/5" + Environment.NewLine;
-            Final += "    [b]Aiming and Shooting:[/b] ";
-            Final = Final + M_Aim + "/5" + Environment.NewLine;
-            Final += "    [b]Speed of Commands:[/b] ";
-            Final = Final + M_SOC + "/5" + Environment.NewLine;
-            Final += "    [b]Knowledge of S.W.A.T. Rules:[/b] ";
-            Final = Final + M_Rules + "/5" + Environment.NewLine;
-            Final += Environment.NewLine;
-            Final = Final + "    [b]Overall:[/b] " + M_Final + "/5" + Environment.NewLine;
-            Final = Final + "    [b]Notes:[/b]|[img]http://i.picresize.com/images/2016/02/04/HCG7b.png[/img][/col]";
-            Final = Final + "[list][*][b]In rules[/b], " + rulescomment + Environment.NewLine;
-            if (M_Rules >= 4)
+            double marks = 0;
+
+            //failed in soc
+            if (seconds >= 8)
+                return marks;
+
+            double temp = seconds - (int)seconds;
+            seconds = (int)seconds;
+
+            switch (seconds)
             {
-                Final = Final + "[*][b]In driving[/b], " + drivingcomment + Environment.NewLine;
-                Final = Final + "[*][b]In the M4 part[/b], he had " + m4numberofcounts + " attempts" + Environment.NewLine;
-                Final = Final + m4comment + Environment.NewLine;
-                Final = Final + duelcomment + Environment.NewLine;
-                Final = Final + "[*][b]In SOC[/b], he had " + socstandingattempts + " attempts for standing part and ";
-                Final = Final + socrunningattempts + " attempts for the running part.";
-                Final = Final + Environment.NewLine + "His average speed of commands is ";
-                Final = Final + SOC_sec + " seconds.";
+                case 7: marks = 3; break;
+                case 6: marks = 3.5; break;
+                case 5: marks = 4; break;
+                case 4: marks = 4.5; break;
+                case 3: marks = 5; return marks;
             }
-            Final+= "[/list]";
-            File.WriteAllText(applicantname+"'s Test result.txt", Final);
-            MessageBox.Show("BB Code is ready, copy it from txt file", "SWAT Test result");
+
+            if (temp == 0.5)
+                marks -= 0.25;
+            return marks;
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -498,7 +396,7 @@ namespace SWAT_Test
             System.Diagnostics.Process.Start("https://ls-rcr.com/forum/memberlist.php?mode=viewprofile&u=22496");
         }
 
-      
+        
     }
 }
 

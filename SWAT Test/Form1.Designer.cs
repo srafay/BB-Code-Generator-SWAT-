@@ -32,7 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lb_Welcome = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label46 = new System.Windows.Forms.Label();
@@ -172,7 +172,7 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.lb_Welcome);
             this.tabPage1.Controls.Add(this.pictureBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
@@ -182,14 +182,14 @@
             this.tabPage1.Text = "Welcome";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // lb_Welcome
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(174, 127);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(197, 13);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Welcome to SWAT test report generator";
+            this.lb_Welcome.AutoSize = true;
+            this.lb_Welcome.Location = new System.Drawing.Point(174, 127);
+            this.lb_Welcome.Name = "lb_Welcome";
+            this.lb_Welcome.Size = new System.Drawing.Size(197, 13);
+            this.lb_Welcome.TabIndex = 1;
+            this.lb_Welcome.Text = "Welcome to SWAT test report generator";
             // 
             // pictureBox1
             // 
@@ -1273,7 +1273,7 @@
 
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lb_Welcome;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TextBox com_rules;
